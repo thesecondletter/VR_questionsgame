@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,7 +12,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* Adding a moving gradient */
+            flex-direction: column;
             background: linear-gradient(90deg, #ffffff, #d3d3d3);
             background-size: 200% 200%;
             animation: moveGradient 5s ease infinite;
@@ -22,11 +22,9 @@
             0% {
                 background-position: 0% 50%;
             }
-
             50% {
                 background-position: 100% 50%;
             }
-
             100% {
                 background-position: 0% 50%;
             }
@@ -41,10 +39,15 @@
             text-align: center;
         }
 
-        h1 {
+        h1 a {
             font-size: 24px;
-            color: #333;
-            margin-bottom: 20px;
+            color: #007bff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        h1 a:hover {
+            color: #0056b3;
         }
 
         p {
@@ -74,26 +77,38 @@
             transition: background-color 0.3s;
         }
 
-            button:hover {
-                background-color: #0056b3;
-            }
+        button:hover {
+            background-color: #0056b3;
+        }
 
         #penalty {
             color: red;
             font-weight: bold;
             margin-top: 20px;
         }
+
+        footer {
+            margin-top: 20px;
+            background: inherit;
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+        }
     </style>
 </head>
 <body>
 
     <div id="game-container">
-        <h1>VR Games</h1>
+        <h1><a href="https://thesecondletter.github.io/VR_questionsgame/" target="_blank">Quiz Games</a></h1>
         <p id="question">Loading...</p>
         <input type="text" id="answer" placeholder="Your answer here">
         <button onclick="checkAnswer()">Submit Answer</button>
         <p id="penalty"></p>
     </div>
+
+    <footer>
+        <p>Made with ❤️ from VR Digital</p>
+    </footer>
 
     <script>
         let questions = [
