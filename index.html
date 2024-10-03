@@ -1,0 +1,168 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trivia with Penalties</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Adding a moving gradient */
+            background: linear-gradient(90deg, #ffffff, #d3d3d3);
+            background-size: 200% 200%;
+            animation: moveGradient 5s ease infinite;
+        }
+
+        @keyframes moveGradient {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        #game-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s;
+        }
+
+            button:hover {
+                background-color: #0056b3;
+            }
+
+        #penalty {
+            color: red;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <h1>VR Games</h1>
+        <p id="question">Loading...</p>
+        <input type="text" id="answer" placeholder="Your answer here">
+        <button onclick="checkAnswer()">Submit Answer</button>
+        <p id="penalty"></p>
+    </div>
+
+    <script>
+        let questions = [
+            { question: "What's the capital of France?", answer: "Paris" },
+            { question: "What's 2 + 2?", answer: "4" },
+            { question: "What color is the sky?", answer: "Blue" },
+            { question: "Who wrote 'Harry Potter'?", answer: "J.K. Rowling" },
+            { question: "What's the capital of Germany?", answer: "Berlin" }
+        ];
+
+        let penalties = [
+            "Drink one shot!",
+            "Do 10 push-ups!",
+            "Sing a song!",
+            "Dance for 30 seconds!",
+            "Do 5 jumping jacks!"
+        ];
+
+        let currentQuestion = 0;
+        let shuffledPenalties = [];
+
+        function shufflePenalties() {
+            shuffledPenalties = penalties
+                .map((penalty) => ({ penalty, sort: Math.random() }))
+                .sort((a, b) => a.sort - b.sort)
+                .map(({ penalty }) => penalty);
+        }
+
+        function startGame() {
+            shufflePenalties(); // Shuffle penalties before starting
+            displayQuestion();  // Display the first question
+        }
+
+        function displayQuestion() {
+            if (currentQuestion < questions.length) {
+                let questionText = questions[currentQuestion].question;
+                document.getElementById("question").innerHTML = questionText;
+            } else {
+                document.getElementById("question").innerHTML = "Game Over! You've completed all the questions.";
+            }
+        }
+
+        function checkAnswer() {
+            let userAnswer = document.getElementById("answer").value.trim();
+            let correctAnswer = questions[currentQuestion].answer;
+
+            if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+                alert("Correct!");
+            } else {
+                // Select the next penalty in the shuffled list
+                let penalty = shuffledPenalties.pop();
+                if (!penalty) {
+                    shufflePenalties(); // Reshuffle if all penalties have been used
+                    penalty = shuffledPenalties.pop();
+                }
+                document.getElementById("penalty").innerHTML = `Wrong! ${penalty}`;
+            }
+
+            // Move to the next question
+            currentQuestion++;
+            document.getElementById("answer").value = "";
+            displayQuestion();
+        }
+
+        // Start the game automatically when the page loads
+        window.onload = function () {
+            startGame();
+        }
+    </script>
+
+</body>
+</html>
