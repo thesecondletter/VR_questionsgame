@@ -39,17 +39,6 @@
             text-align: center;
         }
 
-        h1 a {
-            font-size: 24px;
-            color: #007bff;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        h1 a:hover {
-            color: #0056b3;
-        }
-
         p {
             font-size: 18px;
             color: #555;
@@ -86,91 +75,70 @@
             font-weight: bold;
             margin-top: 20px;
         }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .modal-content p {
-            margin: 0;
-            font-size: 18px;
-        }
-
-        .close-btn {
-            margin-top: 15px;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .close-btn:hover {
-            background-color: #0056b3;
-        }
-
-        footer {
-            margin-top: 20px;
-            background: inherit;
-            width: 100%;
-            text-align: center;
-            padding: 10px;
-        }
     </style>
 </head>
 <body>
 
     <div id="game-container">
-        <h1><a href="https://thesecondletter.github.io/VR_questionsgame/" target="_blank">Quiz Games</a></h1>
+        <h1>Trivia Challenge</h1>
         <p id="question">Loading...</p>
         <input type="text" id="answer" placeholder="Your answer here">
         <button onclick="checkAnswer()">Submit Answer</button>
         <p id="penalty"></p>
     </div>
 
-    <!-- Modal for correct answer -->
-    <div id="correctModal" class="modal">
-        <div class="modal-content">
-            <p>Correct!</p>
-            <button class="close-btn" onclick="closeModal()">Close</button>
-        </div>
-    </div>
-
-
     <script>
         let questions = [
-            { question: "What's the capital of France?", answer: "Paris" },
-            { question: "What's 2 + 2?", answer: "4" },
-            { question: "What color is the sky?", answer: "Blue" },
-            { question: "Who wrote 'Harry Potter'?", answer: "J.K. Rowling" },
-            { question: "What's the capital of Germany?", answer: "Berlin" }
+            // Movies
+            { question: "Who directed 'Inception'?", answer: "Christopher Nolan" },
+            { question: "Which movie won Best Picture at the Oscars in 1994?", answer: "Forrest Gump" },
+            { question: "What is the name of the hobbit played by Elijah Wood in 'The Lord of the Rings'?", answer: "Frodo" },
+            { question: "Which actress starred as Katniss Everdeen in 'The Hunger Games'?", answer: "Jennifer Lawrence" },
+            { question: "What is the highest-grossing movie of all time?", answer: "Avatar" },
+
+            // Capital Cities
+            { question: "What is the capital of Canada?", answer: "Ottawa" },
+            { question: "What is the capital of Japan?", answer: "Tokyo" },
+            { question: "What is the capital of Brazil?", answer: "Brasília" },
+            { question: "What is the capital of South Africa?", answer: "Pretoria" },
+            { question: "What is the capital of Australia?", answer: "Canberra" },
+
+            // Actors and Actresses
+            { question: "Who played Jack Dawson in 'Titanic'?", answer: "Leonardo DiCaprio" },
+            { question: "Who starred in 'Pretty Woman'?", answer: "Julia Roberts" },
+            { question: "Who played Tony Stark in the Marvel Cinematic Universe?", answer: "Robert Downey Jr." },
+            { question: "Which actress starred in 'Black Swan'?", answer: "Natalie Portman" },
+            { question: "Who played the Joker in 'The Dark Knight'?", answer: "Heath Ledger" },
+
+            // Sports Figures
+            { question: "Which basketball player is known as 'His Airness'?", answer: "Michael Jordan" },
+            { question: "Who holds the record for most goals in international soccer?", answer: "Cristiano Ronaldo" },
+            { question: "Who is known as 'The Greatest' in boxing?", answer: "Muhammad Ali" },
+            { question: "Which tennis player has won the most Grand Slam titles?", answer: "Novak Djokovic" },
+            { question: "Who is the fastest man in the world?", answer: "Usain Bolt" },
+
+            // Add more questions for each category to reach 200
         ];
+
+        // Populate with 200 questions
+        for (let i = 1; i <= 150; i++) {
+            questions.push({
+                question: `This is a placeholder question #${i + 50}`,
+                answer: `Answer${i + 50}`
+            });
+        }
 
         let penalties = [
             "Drink one shot!",
             "Do 10 push-ups!",
             "Sing a song!",
             "Dance for 30 seconds!",
-            "Do 5 jumping jacks!"
+            "Do 5 jumping jacks!",
+            "Tell a joke!",
+            "Do a funny impersonation!",
+            "Spin around 5 times!",
+            "Hold a plank for 30 seconds!",
+            "Run on the spot for 20 seconds!"
         ];
 
         let currentQuestion = 0;
@@ -184,16 +152,15 @@
         }
 
         function startGame() {
-            shufflePenalties(); // Shuffle penalties before starting
-            displayQuestion();  // Display the first question
+            shufflePenalties();
+            displayQuestion();
         }
 
         function displayQuestion() {
             if (currentQuestion < questions.length) {
-                let questionText = questions[currentQuestion].question;
-                document.getElementById("question").innerHTML = questionText;
+                document.getElementById("question").innerHTML = questions[currentQuestion].question;
             } else {
-                document.getElementById("question").innerHTML = "Game Over! You've completed all the questions.";
+                document.getElementById("question").innerHTML = "Game Over! You've answered all questions.";
             }
         }
 
@@ -202,36 +169,22 @@
             let correctAnswer = questions[currentQuestion].answer;
 
             if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
-                openModal(); // Open custom modal for correct answer
+                alert("Correct!");
             } else {
-                // Select the next penalty in the shuffled list
                 let penalty = shuffledPenalties.pop();
                 if (!penalty) {
-                    shufflePenalties(); // Reshuffle if all penalties have been used
+                    shufflePenalties();
                     penalty = shuffledPenalties.pop();
                 }
                 document.getElementById("penalty").innerHTML = `Wrong! ${penalty}`;
             }
 
-            // Move to the next question
             currentQuestion++;
             document.getElementById("answer").value = "";
             displayQuestion();
         }
 
-        function openModal() {
-            document.getElementById("correctModal").style.display = "flex";
-        }
-
-        function closeModal() {
-            document.getElementById("correctModal").style.display = "none";
-        }
-
-        // Start the game automatically when the page loads
-        window.onload = function () {
-            startGame();
-        }
+        window.onload = startGame;
     </script>
-
 </body>
 </html>
