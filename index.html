@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trivia</title>
+    <title>Trivia with Penalties</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -89,44 +89,27 @@
 
     <script>
         let questions = [
-            // Movies
             { question: "Who directed 'Inception'?", answer: "Christopher Nolan" },
             { question: "Which movie won Best Picture at the Oscars in 1994?", answer: "Forrest Gump" },
             { question: "What is the name of the hobbit played by Elijah Wood in 'The Lord of the Rings'?", answer: "Frodo" },
             { question: "Which actress starred as Katniss Everdeen in 'The Hunger Games'?", answer: "Jennifer Lawrence" },
             { question: "What is the highest-grossing movie of all time?", answer: "Avatar" },
-
-            // Capital Cities
             { question: "What is the capital of Canada?", answer: "Ottawa" },
             { question: "What is the capital of Japan?", answer: "Tokyo" },
             { question: "What is the capital of Brazil?", answer: "Brasília" },
             { question: "What is the capital of South Africa?", answer: "Pretoria" },
             { question: "What is the capital of Australia?", answer: "Canberra" },
-
-            // Actors and Actresses
             { question: "Who played Jack Dawson in 'Titanic'?", answer: "Leonardo DiCaprio" },
             { question: "Who starred in 'Pretty Woman'?", answer: "Julia Roberts" },
             { question: "Who played Tony Stark in the Marvel Cinematic Universe?", answer: "Robert Downey Jr." },
             { question: "Which actress starred in 'Black Swan'?", answer: "Natalie Portman" },
             { question: "Who played the Joker in 'The Dark Knight'?", answer: "Heath Ledger" },
-
-            // Sports Figures
             { question: "Which basketball player is known as 'His Airness'?", answer: "Michael Jordan" },
             { question: "Who holds the record for most goals in international soccer?", answer: "Cristiano Ronaldo" },
             { question: "Who is known as 'The Greatest' in boxing?", answer: "Muhammad Ali" },
             { question: "Which tennis player has won the most Grand Slam titles?", answer: "Novak Djokovic" },
-            { question: "Who is the fastest man in the world?", answer: "Usain Bolt" },
-
-            // Add more questions for each category to reach 200
+            { question: "Who is the fastest man in the world?", answer: "Usain Bolt" }
         ];
-
-        // Populate with 200 questions
-        for (let i = 1; i <= 150; i++) {
-            questions.push({
-                question: `This is a placeholder question #${i + 50}`,
-                answer: `Answer${i + 50}`
-            });
-        }
 
         let penalties = [
             "Drink one shot!",
@@ -141,24 +124,25 @@
             "Run on the spot for 20 seconds!"
         ];
 
-        let currentQuestion = 0;
-        let shuffledPenalties = [];
+        let shuffledQuestions = [];
+        let currentQuestionIndex = 0;
 
-        function shufflePenalties() {
-            shuffledPenalties = penalties
-                .map((penalty) => ({ penalty, sort: Math.random() }))
+        function shuffleArray(array) {
+            return array
+                .map(item => ({ item, sort: Math.random() }))
                 .sort((a, b) => a.sort - b.sort)
-                .map(({ penalty }) => penalty);
+                .map(({ item }) => item);
         }
 
         function startGame() {
-            shufflePenalties();
+            shuffledQuestions = shuffleArray(questions); // Shuffle questions
+            shuffledPenalties = shuffleArray(penalties); // Shuffle penalties
             displayQuestion();
         }
 
         function displayQuestion() {
-            if (currentQuestion < questions.length) {
-                document.getElementById("question").innerHTML = questions[currentQuestion].question;
+            if (currentQuestionIndex < shuffledQuestions.length) {
+                document.getElementById("question").innerHTML = shuffledQuestions[currentQuestionIndex].question;
             } else {
                 document.getElementById("question").innerHTML = "Game Over! You've answered all questions.";
             }
@@ -166,20 +150,20 @@
 
         function checkAnswer() {
             let userAnswer = document.getElementById("answer").value.trim();
-            let correctAnswer = questions[currentQuestion].answer;
+            let correctAnswer = shuffledQuestions[currentQuestionIndex].answer;
 
             if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
                 alert("Correct!");
             } else {
                 let penalty = shuffledPenalties.pop();
                 if (!penalty) {
-                    shufflePenalties();
+                    shuffledPenalties = shuffleArray(penalties); // Reshuffle if penalties are empty
                     penalty = shuffledPenalties.pop();
                 }
                 document.getElementById("penalty").innerHTML = `Wrong! ${penalty}`;
             }
 
-            currentQuestion++;
+            currentQuestionIndex++;
             document.getElementById("answer").value = "";
             displayQuestion();
         }
